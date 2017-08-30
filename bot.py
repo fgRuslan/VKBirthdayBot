@@ -1,7 +1,7 @@
 ﻿#!/usr/bin/python
 #-*- coding utf8 -*-
 # Author: https://vk.com/id181265169
-import vk, urllib2, json, random
+import vk, urllib2, json, random, time, datetime
 
 config = {}# Создаём массив с конфигурацией
 
@@ -27,15 +27,22 @@ api = vk.API(session)
 
 phrases = [u"Message 1", u"Message 2", u"Message 3", u"Message 4"]
 
+now = datetime.datetime.now()
+print "Current date: %s.%s" % (now.day, now.month)
+
 def sendMessage():
-	try:
-		r = api.friends.get()
-		fCount = len(r)# Получаем к-во друзей
-		for i in range(1, fCount):
-			r = api.friends.get(count = 1, fields = "bdate", offset = i)
-			print r
-	except:
-		print u"Произошла ошибка при отправке сообщения"
-		return
+	r = api.friends.get()
+	fCount = len(r)# Получаем к-во друзей
+	for i in range(0, fCount):
+		time.sleep(0.5)
+		r = api.friends.get(count = 1, fields = "bdate", offset = i)[0]
+		if u'bdate' in r:
+			r1 = r[u'bdate']
+			birthDate = r1.split(".")
+			print "Birth date: %s.%s" % (birthDate[0], birthDate[1])
+			if (int(birthDate[0]) == now.day) and (int(birthDate[1]) == now.month):
+				r = api.messages.send(peer_id = r['uid'], message = random.choice(phrases), v = 5.38)
+		else:
+			print u"День рождения не указан"
 
 sendMessage()
