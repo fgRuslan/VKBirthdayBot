@@ -1,5 +1,5 @@
 ﻿#!/usr/bin/python
-#-*- coding utf8 -*-
+# -*- coding utf8 -*-
 # Author: https://vk.com/id181265169
 import vk, urllib2, json, random, time, datetime
 
