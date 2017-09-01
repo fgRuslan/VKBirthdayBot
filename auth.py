@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#-*- coding utf8 -*-
+# -*- coding: utf-8 -*- 
 username = raw_input("Login:")
 password = raw_input("Password:")
 
