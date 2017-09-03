@@ -27,7 +27,8 @@ api = vk.API(session)
 
 littleemoji = ["&#127873;&#127881;&#127874;", "&#127874;&#127873;&#127881;"]
 bigSmiles = [3466]
-useBigSmiles = config['useBigSmiles']
+zeroone = [0,1]
+useBigSmiles = random.choice(zeroone)
 
 now = datetime.datetime.now()
 print "Current date: %s.%s" % (now.day, now.month)
