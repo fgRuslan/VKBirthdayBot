@@ -2,7 +2,7 @@
 
 Бот для VK, поздравляющий друзей пользователя с днём рождения.
 
-Для запуска бота необходим [python 2.7](python.org) (или выше) и [vk.com API Python wrapper](https://pypi.python.org/pypi/vk/2.0.2)
+Для запуска бота необходим [python 3](python.org)
 
 Чтобы настроить бота:
 ```
