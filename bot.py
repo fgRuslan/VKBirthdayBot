@@ -35,20 +35,20 @@ print("Current date: %s.%s" % (now.day, now.month))
 
 def sendMessage():
 	try:
-		r = api.friends.get()
-		fCount = len(r)# Получаем к-во друзей
+		r = api.friends.get(v=5.101)
+		fCount = r['count']# Получаем к-во друзей
 		for i in range(0, fCount):
 			time.sleep(0.5)
-			r = api.friends.get(count = 1, fields = "bdate", offset = i)[0]
+			r = api.friends.get(count = 1, fields = "bdate", offset = i, v=5.101)['items'][0]#[0]
 			if 'bdate' in r:
 				r1 = r['bdate']
 				birthDate = r1.split(".")
 				print("Birth date: %s.%s" % (birthDate[0], birthDate[1]))
 				if (int(birthDate[0]) == now.day) and (int(birthDate[1]) == now.month):
 					if(useBigSmiles == 1):
-						r = api.messages.send(peer_id = r['uid'], sticker_id = random.choice(bigSmiles), v = 5.38)
+						r = api.messages.send(peer_id = r['uid'], sticker_id = random.choice(bigSmiles), v = 5.101)
 					else:
-						r = api.messages.send(peer_id = r['uid'], message = random.choice(littleemoji), v = 5.38)
+						r = api.messages.send(peer_id = r['uid'], message = random.choice(littleemoji), v = 5.101)
 			else:
 				print("Birthday is not set by user")
 	except KeyboardInterrupt:
