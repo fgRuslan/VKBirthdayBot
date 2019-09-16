@@ -46,9 +46,9 @@ def sendMessage():
 				print("Birth date: %s.%s" % (birthDate[0], birthDate[1]))
 				if (int(birthDate[0]) == now.day) and (int(birthDate[1]) == now.month):
 					if(useBigSmiles == 1):
-						r = api.messages.send(peer_id = r['id'], sticker_id = random.choice(bigSmiles), v = 5.101)
+						r = api.messages.send(peer_id = r['id'], sticker_id = random.choice(bigSmiles),'random_id': 0, v = 5.101)
 					else:
-						r = api.messages.send(peer_id = r['id'], message = random.choice(littleemoji), v = 5.101)
+						r = api.messages.send(peer_id = r['id'], message = random.choice(littleemoji),'random_id': 0, v = 5.101)
 			else:
 				print("Birthday is not set by user")
 	except KeyboardInterrupt:
