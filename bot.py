@@ -22,16 +22,29 @@ except urllib.error.HTTPError:
 r = r.read()# Читаем, что нам вернул сайт
 token = json.loads(r)["access_token"]# Декодируем через JSON и читаем access_token(то, зачем мы вообще логинились)
 
+API_VERSION = 5.101
+
 session = vk.Session(access_token = token)# Создаём сессию ВК
 api = vk.API(session)
 
 littleemoji = ["&#127873;&#127881;&#127874;", "&#127874;&#127873;&#127881;"]
 bigSmiles = [3466]
 zeroone = [0,1]
+messages = ["Message 1", "Message 2", "Message 3", "Message 4"]
+
 useBigSmiles = random.choice(zeroone)
+use_text = True
 
 now = datetime.datetime.now()
 print("Current date: %s.%s" % (now.day, now.month))
+
+prompt = input("Use text messages instead of smiles, etc.? (y/n): ")
+if not(prompt == "y" or prompt == "Y" or prompt == "Yes"):
+	use_text = False
+if use_text == False:
+	prompt = input("Use smiles instead of little emojis? (y/n): ")
+	if not(prompt == "y" or prompt == "Y" or prompt == "Yes"):
+		useBigSmiles = False
 
 def sendMessage():
 	try:
@@ -45,10 +58,12 @@ def sendMessage():
 				birthDate = r1.split(".")
 				print("Birth date: %s.%s" % (birthDate[0], birthDate[1]))
 				if (int(birthDate[0]) == now.day) and (int(birthDate[1]) == now.month):
+					if(use_text == True):
+						r = api.messages.send(peer_id = r['id'], message = random.choice(messages), random_id = 0, v = API_VERSION)
 					if(useBigSmiles == 1):
-						r = api.messages.send(peer_id = r['id'], sticker_id = random.choice(bigSmiles), random_id = 0, v = 5.101)
+						r = api.messages.send(peer_id = r['id'], sticker_id = random.choice(bigSmiles), random_id = 0, v = API_VERSION)
 					else:
-						r = api.messages.send(peer_id = r['id'], message = random.choice(littleemoji), random_id = 0, v = 5.101)
+						r = api.messages.send(peer_id = r['id'], message = random.choice(littleemoji), random_id = 0, v = API_VERSION)
 			else:
 				print("Birthday is not set by user")
 	except KeyboardInterrupt:
