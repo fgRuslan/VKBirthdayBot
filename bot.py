@@ -1,30 +1,62 @@
-﻿#!/usr/bin/python
+#!/usr/bin/python
 # -*- coding: utf-8 -*- 
 # Author: https://vk.com/id181265169
-import vk, urllib.request, urllib.error, urllib.parse, json, random, time, datetime
 
-config = {}# Создаём массив с конфигурацией
+import os
+import json
+import time
+import random
+import datetime
+import urllib.request, urllib.error, urllib.parse
+import vk
 
-try:
-	exec(compile(open("config.py", "rb").read(), "config.py", 'exec'), config)# Загружаем туда конфигурацию из файла
-except IOError:
-	print("No configuration file found, to create it, run auth.py")
-	quit(1)
-	
-url = "https://oauth.vk.com/token?grant_type=password&client_id=3697615&client_secret=AlVXZFMUqyrnABp8ncuU&username=%s&password=%s" % (config['username'], config['password'])
 
-try:
-    r = urllib.request.urlopen(url)# Переходим по ссылке(логинимся)
-except urllib.error.HTTPError:
-    print("Authorization failed")
-    quit(1)
+def get_token():
+    '''
+    Отсылает запрос на ТОКЕН 
+    с разрешением на отправку сообщений через приложение
+    Возвращает этот ТОКЕН
+    При неудаче возвращает False
+    '''
+    username = input('Enter login: ')
+    password = input('Enter password: ')
+    url = "https://oauth.vk.com/token?grant_type=password&client_id=3697615&client_secret=AlVXZFMUqyrnABp8ncuU&username=%s&password=%s" % (username, password)
 
-r = r.read()# Читаем, что нам вернул сайт
-token = json.loads(r)["access_token"]# Декодируем через JSON и читаем access_token(то, зачем мы вообще логинились)
+    try:
+        TOKEN = urllib.request.urlopen(url).read()
+        TOKEN = json.loads(TOKEN)['access_token']
+        return TOKEN
+    except urllib.error.HTTPError as err:
+        if err.code == 401:
+            print('!!! Invalid login or password !!!')
+        elif err.code == 404:
+            print('!!! Failed connect to server !!!')
+        else:
+            print('!!! Request error !!!')
+        return False
+
+
+TOKEN_PATH = os.path.join(os.getcwd(), 'token.dat')
+
+# Получаем ТОКЕН доступа
+if os.path.exists(TOKEN_PATH):
+    with open(TOKEN_PATH, 'r') as token_file:
+        TOKEN = token_file.read()
+    print('Token was loaded!\n')
+else:
+    while True:
+        TOKEN = get_token()
+            if TOKEN:
+                break
+    
+    if input('Save access token? (y/n): ') in 'Yy':
+        with open(TOKEN_PATH, 'w') as token_file:
+            token_file.write(TOKEN)
+        print('Token was loaded!\n')
 
 API_VERSION = 5.101
 
-session = vk.Session(access_token = token)# Создаём сессию ВК
+session = vk.Session(access_token = TOKEN)# Создаём сессию ВК
 api = vk.API(session)
 
 littleemoji = ["&#127873;&#127881;&#127874;", "&#127874;&#127873;&#127881;"]
