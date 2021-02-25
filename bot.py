@@ -36,48 +36,6 @@ def get_token():
         return False
 
 
-TOKEN_PATH = os.path.join(os.getcwd(), 'token.dat')
-
-# Получаем ТОКЕН доступа
-if os.path.exists(TOKEN_PATH):
-    with open(TOKEN_PATH, 'r') as token_file:
-        TOKEN = token_file.read()
-    print('Token was loaded!\n')
-else:
-    while True:
-        TOKEN = get_token()
-            if TOKEN:
-                break
-    
-    if input('Save access token? (y/n): ') in 'Yy':
-        with open(TOKEN_PATH, 'w') as token_file:
-            token_file.write(TOKEN)
-        print('Token was loaded!\n')
-
-API_VERSION = 5.101
-
-session = vk.Session(access_token = TOKEN)# Создаём сессию ВК
-api = vk.API(session)
-
-littleemoji = ["&#127873;&#127881;&#127874;", "&#127874;&#127873;&#127881;"]
-bigSmiles = [3466]
-zeroone = [0,1]
-messages = ["Message 1", "Message 2", "Message 3", "Message 4"]
-
-useBigSmiles = random.choice(zeroone)
-use_text = True
-
-now = datetime.datetime.now()
-print("Current date: %s.%s" % (now.day, now.month))
-
-prompt = input("Use text messages instead of smiles, etc.? (y/n): ")
-if not(prompt == "y" or prompt == "Y" or prompt == "Yes"):
-	use_text = False
-if use_text == False:
-	prompt = input("Use smiles instead of little emojis? (y/n): ")
-	if not(prompt == "y" or prompt == "Y" or prompt == "Yes"):
-		useBigSmiles = False
-
 def sendMessage():
 	try:
 		r = api.friends.get(v=5.101)
@@ -104,5 +62,58 @@ def sendMessage():
 		print("==========ERROR==========")
 		print(e)
 		print("=========================")
+
+
+TOKEN_PATH = os.path.join(os.getcwd(), 'token.dat')
+API_VERSION = 5.101
+
+# Emoji поздравления
+littleemoji = ["&#127873;&#127881;&#127874;", 
+               "&#127874;&#127873;&#127881;"]
+# Поздравления стикером (id стикера)
+bigSmiles = [3466]
+# Текстовые поздравления
+messages = ["Message 1", 
+            "Message 2", 
+            "Message 3", 
+            "Message 4"]
+
+
+# Получаем ТОКЕН доступа
+if os.path.exists(TOKEN_PATH):
+    with open(TOKEN_PATH, 'r') as token_file:
+        TOKEN = token_file.read()
+    print('Token was loaded!\n')
+else:
+    while True:
+        TOKEN = get_token()
+        if TOKEN:
+            break
+    
+    if input('Save access token? (y/n): ') in 'Yy':
+        with open(TOKEN_PATH, 'w') as token_file:
+            token_file.write(TOKEN)
+        print('Token was loaded!\n')
+
+# Создаём сессию ВК
+session = vk.Session(access_token = TOKEN)
+api = vk.API(session)
+
+# Выводим сегодняшную дату в консоль
+now = datetime.datetime.now()
+print("Current date: %s.%s" % (now.day, now.month))
+
+# Спрашиваем какого вида отправлять поздравление (текст, смайлы, стикеры)
+prompt = input("Use text messages instead of smiles, etc.? (y/n): ")
+if prompt.lower() in ['y', 'yes']:
+	use_text = True
+else:
+	use_text = False
+	prompt = input("Use smiles instead of little emojis? (y/n): ")
+	if prompt.lower() not in ['y', 'yes']:
+		useBigSmiles = False
+	else:
+		useBigSmiles = random.choice([0,1])
+
 
 sendMessage()
