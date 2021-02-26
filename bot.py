@@ -109,11 +109,13 @@ if prompt.lower() in ['y', 'yes']:
 	use_text = True
 else:
 	use_text = False
-	prompt = input("Use smiles instead of little emojis? (y/n): ")
+	prompt = input("Use smiles instead of little emojis? (y/n/random): ")
 	if prompt.lower() not in ['y', 'yes']:
 		useBigSmiles = False
+		if prompt.lower() in ['r', 'random']:
+			useBigSmiles = random.choice([0,1])
 	else:
-		useBigSmiles = random.choice([0,1])
+		useBigSmiles = True
 
 
 sendMessage()
