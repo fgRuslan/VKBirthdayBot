@@ -20,7 +20,7 @@ def get_token():
     '''
     username = input('Enter login: ')
     password = input('Enter password: ')
-    url = "https://oauth.vk.com/token?grant_type=password&client_id=3697615&client_secret=AlVXZFMUqyrnABp8ncuU&username=%s&password=%s" % (username, password)
+    url = "https://oauth.vk.com/token?grant_type=password&client_id=6146827&client_secret=qVxWRF1CwHERuIrKBnqe&username=%s&password=%s&v=5.131&2fa_supported=1" % (username, password)
 
     try:
         TOKEN = urllib.request.urlopen(url).read()
@@ -96,8 +96,7 @@ else:
         print('Token was loaded!\n')
 
 # Создаём сессию ВК
-session = vk.Session(access_token = TOKEN)
-api = vk.API(session)
+api = vk.API(access_token = TOKEN)
 
 # Выводим сегодняшную дату в консоль
 now = datetime.datetime.now()
